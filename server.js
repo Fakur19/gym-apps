@@ -10,7 +10,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// --- API Routes (These run in both dev and production) ---
+// This route will be used by Render to confirm the server is live.
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'OK', message: 'Server is healthy' });
+});
+// =======================================
+
+// --- API Routes ---
 const memberRoutes = require('./routes/memberRoutes');
 const planRoutes = require('./routes/planRoutes');
 const checkinRoutes = require('./routes/checkinRoutes');
@@ -22,12 +28,9 @@ app.use('/api/checkins', checkinRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/transactions', transactionsRoutes);
 
-// Serve the React static files ONLY in production
+// --- Serve React App in Production ---
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'client/dist')));
-
-  // Health check route for Render
-  app.get('/health', (req, res) => res.status(200).send('OK'));
 
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
