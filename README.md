@@ -1,4 +1,4 @@
-# GymPro - Gym Management System
+# GymBroS
 
 A full-stack web application designed to manage gym operations, including member registration, check-ins, payments, and business analytics.
 
