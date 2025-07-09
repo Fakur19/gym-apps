@@ -8,25 +8,20 @@ import AdminView from './views/AdminView';
 
 function App() {
   const [activeView, setActiveView] = useState('dashboard');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // New state for sidebar
 
-  const renderView = () => {
-    switch (activeView) {
-      case 'dashboard':
-        return <DashboardView />;
-      case 'members':
-        return <MembersView />;
-      case 'transactions':
-        return <TransactionsView />;
-      case 'admin':
-        return <AdminView />;
-      default:
-        return <DashboardView />;
-    }
+  const handleNavigate = (view) => {
+    setActiveView(view);
   };
 
   return (
     <div className="flex h-screen bg-gray-100" style={{ fontFamily: "'Inter', sans-serif" }}>
-      <Sidebar setActiveView={setActiveView} activeView={activeView} />
+      <Sidebar 
+        setActiveView={handleNavigate} 
+        activeView={activeView}
+        isCollapsed={isSidebarCollapsed}
+        setIsCollapsed={setIsSidebarCollapsed}
+      />
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="bg-white shadow-sm h-16 flex items-center justify-end px-6">
@@ -34,7 +29,21 @@ function App() {
         </header>
 
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
-          {renderView()}
+          {/* The renderView function will now be inside the return statement */}
+          {(() => {
+            switch (activeView) {
+              case 'dashboard':
+                return <DashboardView />;
+              case 'members':
+                return <MembersView onNavigate={() => {}} />;
+              case 'transactions':
+                return <TransactionsView />;
+              case 'admin':
+                return <AdminView />;
+              default:
+                return <DashboardView />;
+            }
+          })()}
         </main>
       </div>
     </div>
