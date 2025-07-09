@@ -3,14 +3,14 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 const seedPlans = require('./seeds/planSeeder');
-const path = require('path'); // Add this line
+const path = require('path');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// --- API Routes (Keep these at the top) ---
+// --- API Routes (These run in both dev and production) ---
 const memberRoutes = require('./routes/memberRoutes');
 const planRoutes = require('./routes/planRoutes');
 const checkinRoutes = require('./routes/checkinRoutes');
@@ -22,23 +22,26 @@ app.use('/api/checkins', checkinRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/transactions', transactionsRoutes);
 
-// === NEW: Serve React App in Production ===
-// This serves the built static files from the 'client/dist' directory
-app.use(express.static(path.join(__dirname, 'client/dist')));
+// Serve the React static files ONLY in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'client/dist')));
 
-// This wildcard route ensures that any request not handled by the API
-// gets redirected to the React app's index.html file.
-app.get('*', (req, res) => {
+  // Health check route for Render
+  app.get('/health', (req, res) => res.status(200).send('OK'));
+
+  app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
-});
-// =======================================
+  });
+}
 
 // --- Database Connection ---
 const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/gym_management';
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('MongoDB Connected successfully');
-    seedPlans();
+    if (process.env.NODE_ENV !== 'production') {
+        seedPlans();
+    }
   })
   .catch(err => console.error('MongoDB connection error:', err));
 
