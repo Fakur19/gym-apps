@@ -1,0 +1,22 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/client/node_modules
+    environment:
+      - MONGO_URI=mongodb://db:27017/gym_management
+      - CHOKIDAR_USEPOLLING=true # Helps with file watching in Docker
+    depends_on:
+      - db
+
+  db:
+    image: mongo:latest
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:

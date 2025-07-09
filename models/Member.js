@@ -1,0 +1,27 @@
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const MemberSchema = new Schema({
+  name: { type: String, required: true },
+  email: { type: String, unique: true },
+  phone: { type: String, required: true},
+  joinDate: { type: Date, default: Date.now },
+  membership: {
+    plan: { type: Schema.Types.ObjectId, ref: 'MembershipPlan', required: true },
+    planName: { type: String, required: true },
+    price: { type: Number, required: true },
+    startDate: { type: Date, required: true },
+    endDate: { type: Date, required: true },
+  }
+}, {
+    // Enable virtuals to be included in JSON responses
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+});
+
+// Virtual property for membership status
+MemberSchema.virtual('membership.status').get(function() {
+    return new Date() < this.membership.endDate ? 'Active' : 'Expired';
+});
+
+module.exports = mongoose.model('Member', MemberSchema);

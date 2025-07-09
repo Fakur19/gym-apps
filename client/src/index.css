@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media print {
+    /* Hides the main React app (#root) ONLY when the body has the 'print-active' class */
+    body.print-active > #root {
+        display: none;
+    }
+}
