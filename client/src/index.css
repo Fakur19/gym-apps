@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+.toggle-container {
+    @apply flex gap-1 bg-gray-200 p-1 rounded-full;
+}
+
+.chart-toggle-btn {
+    @apply px-4 py-1 rounded-full text-sm font-medium text-gray-600 transition-all duration-200;
+}
+
+.active-chart-toggle {
+    @apply bg-white text-blue-600 shadow;
+}
+
 @media print {
     /* Hides the main React app (#root) ONLY when the body has the 'print-active' class */
     body.print-active > #root {
