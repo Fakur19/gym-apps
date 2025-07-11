@@ -15,8 +15,26 @@
 }
 
 @media print {
-    /* Hides the main React app (#root) ONLY when the body has the 'print-active' class */
-    body.print-active > #root {
-        display: none;
-    }
+  /* Hide everything in the body by default when printing */
+  body * {
+    visibility: hidden;
+  }
+
+  /* When printing is active, make the invoice section and its children visible */
+  #invoice-section, #invoice-section * {
+    visibility: visible;
+  }
+
+  /* Position the invoice at the top of the page */
+  #invoice-section {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  /* Hide the main app root to be safe */
+  body.print-active > #root {
+    display: none;
+  }
 }
