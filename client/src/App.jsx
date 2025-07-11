@@ -4,6 +4,7 @@ import axios from 'axios';
 
 axios.defaults.baseURL = 'http://localhost:3000';
 import Sidebar from './components/Sidebar';
+import { FaBars } from 'react-icons/fa';
 import DashboardView from './views/DashboardView';
 import MembersView from './views/MembersView';
 import TransactionsView from './views/TransactionsView';
@@ -16,6 +17,7 @@ function App() {
     isAuthenticated: false,
     user: null,
   });
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // New state for mobile sidebar
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -63,6 +65,10 @@ function App() {
     navigate('/login');
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   // Simple ProtectedRoute component
   const ProtectedRoute = ({ children, allowedRoles }) => {
     if (!auth.isAuthenticated) {
@@ -77,19 +83,56 @@ function App() {
   return (
     <div className="flex h-screen bg-gray-100" style={{ fontFamily: "'Inter', sans-serif" }}>
       {auth.isAuthenticated && (
-        <Sidebar
-          activeView={location.pathname.substring(1) || 'dashboard'}
-          setActiveView={(view) => navigate(`/${view}`)}
-          isCollapsed={false} // You can manage this state if needed
-          setIsCollapsed={() => {}} // You can manage this state if needed
-          handleLogout={handleLogout}
-          userRole={auth.user?.role}
-        />
+        <>
+          {/* Sidebar for larger screens */}
+          <div className="hidden md:flex">
+            <Sidebar
+              activeView={location.pathname.substring(1) || 'dashboard'}
+              setActiveView={(view) => {
+                navigate(`/${view}`);
+                setIsSidebarOpen(false); // Close sidebar on navigation
+              }}
+              isCollapsed={false} // Always expanded on desktop
+              setIsCollapsed={() => {}} // Not used for desktop responsiveness
+              handleLogout={handleLogout}
+              userRole={auth.user?.role}
+            />
+          </div>
+
+          {/* Mobile Sidebar */}
+          <div className={`fixed inset-y-0 left-0 z-40 w-64 bg-gray-800 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:hidden transition-transform duration-300 ease-in-out`}>
+            <Sidebar
+              activeView={location.pathname.substring(1) || 'dashboard'}
+              setActiveView={(view) => {
+                navigate(`/${view}`);
+                setIsSidebarOpen(false); // Close sidebar on navigation
+              }}
+              isCollapsed={false} // Always expanded on mobile
+              setIsCollapsed={() => {}} // Not used for mobile responsiveness
+              handleLogout={handleLogout}
+              userRole={auth.user?.role}
+            />
+          </div>
+
+          {/* Overlay for mobile sidebar */}
+          {isSidebarOpen && (
+            <div
+              className="fixed inset-0 bg-black opacity-50 z-30 md:hidden"
+              onClick={() => setIsSidebarOpen(false)}
+            ></div>
+          )}
+        </>
       )}
 
       <div className="flex-1 flex flex-col overflow-hidden">
         {auth.isAuthenticated && (
-          <header className="bg-white shadow-sm h-16 flex items-center justify-end px-6">
+          <header className="bg-white shadow-sm h-16 flex items-center justify-between px-6">
+            <button
+              onClick={toggleSidebar}
+              className="text-gray-600 focus:outline-none md:hidden"
+            >
+              <FaBars className="h-6 w-6" />
+            </button>
             {/* Header content can go here */}
           </header>
         )}
