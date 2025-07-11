@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const MemberSchema = new Schema({
   name: { type: String, required: true },
-  email: { type: String, unique: true },
+  email: { type: String },
   phone: { type: String, required: true},
   joinDate: { type: Date, default: Date.now },
   membership: {

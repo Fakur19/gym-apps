@@ -29,11 +29,11 @@ const RegistrationForm = ({ plans, onMemberAdded }) => {
         </div>
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-600 mb-1">Email</label>
-          <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+          <input type="email"  placeholder="Optional" id="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
         <div>
           <label htmlFor="phone" className="block text-sm font-medium text-gray-600 mb-1">Phone</label>
-          <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
         </div>
         <div>
           <label htmlFor="planId" className="block text-sm font-medium text-gray-600 mb-1">Plan</label>

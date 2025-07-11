@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const LoginView = ({ setAuth }) => {
     const [email, setEmail] = useState('');
@@ -62,9 +62,6 @@ const LoginView = ({ setAuth }) => {
                         </button>
                     </div>
                 </form>
-                <p className="text-center text-gray-600 text-sm mt-4">
-                    Don't have an account? <Link to="/register" className="text-blue-500 hover:text-blue-800">Register</Link>
-                </p>
             </div>
         </div>
     );

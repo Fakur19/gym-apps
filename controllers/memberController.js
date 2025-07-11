@@ -6,7 +6,7 @@ exports.addMember = async (req, res) => {
   try {
     const { name, email, phone, planId } = req.body;
 
-    if (!name || !email || !planId) {
+    if (!name || !phone || !planId) {
       return res.status(400).json({ msg: 'Please enter all required fields' });
     }
 

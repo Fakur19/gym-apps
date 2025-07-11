@@ -9,7 +9,7 @@ import MembersView from './views/MembersView';
 import TransactionsView from './views/TransactionsView';
 import AdminView from './views/AdminView';
 import LoginView from './views/LoginView';
-import RegisterView from './views/RegisterView';
+
 
 function App() {
   const [auth, setAuth] = useState({
@@ -35,7 +35,7 @@ function App() {
         user: null,
       });
       // Redirect to login if not authenticated and not already on login page
-      if (location.pathname !== '/' && location.pathname !== '/login' && location.pathname !== '/register') {
+      if (location.pathname !== '/' && location.pathname !== '/login') {
         navigate('/login');
       }
     }
@@ -97,7 +97,6 @@ function App() {
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
           <Routes>
             <Route path="/login" element={<LoginView setAuth={setAuth} />} />
-            <Route path="/register" element={<RegisterView />} />
             <Route path="/" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />
             <Route path="/members" element={<ProtectedRoute><MembersView /></ProtectedRoute>} />
