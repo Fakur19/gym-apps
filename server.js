@@ -7,12 +7,28 @@ const path = require('path');
 
 const app = express();
 
-app.use(cors({ 
-    origin: '*',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+// CORS Configuration
+if (process.env.NODE_ENV === 'production') {
+  // Production CORS: only allow the frontend URL
+  const allowedOrigins = ['https://gym-apps-itej.onrender.com'];
+  const corsOptions = {
+    origin: (origin, callback) => {
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
-    optionsSuccessStatus: 204
-}));
+  };
+  app.use(cors(corsOptions));
+} else {
+  // Development CORS: allow any origin
+  app.use(cors({
+    origin: '*', // Or specify your local dev URL e.g., 'http://localhost:5173'
+    credentials: true,
+  }));
+}
 app.use(express.json());
 
 // This route will be used by Render to confirm the server is live.
