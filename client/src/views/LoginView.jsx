@@ -11,9 +11,10 @@ const LoginView = ({ setAuth }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('/api/auth/login', { email, password });
+            const res = await axios.post('/auth/login', { email, password });
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('user', JSON.stringify({ id: res.data._id, email: res.data.email, role: res.data.role }));
+            axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`; // Set auth header immediately
             setAuth({ isAuthenticated: true, user: res.data });
             navigate('/dashboard'); // Redirect to dashboard after login
         } catch (err) {

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:3000';
+import './services/api'; // Import to initialize Axios base URL
 import Sidebar from './components/Sidebar';
 import { FaBars } from 'react-icons/fa';
 import DashboardView from './views/DashboardView';
@@ -52,6 +52,7 @@ function App() {
         // Token expired or invalid, log out user
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        delete axios.defaults.headers.common['Authorization']; // Clear auth header
         setAuth({ isAuthenticated: false, user: null });
         navigate('/login');
       }
@@ -62,6 +63,7 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    delete axios.defaults.headers.common['Authorization']; // Clear auth header
     setAuth({ isAuthenticated: false, user: null });
     navigate('/login');
   };
