@@ -1,4 +1,4 @@
-const TransactionFilters = ({ onFilterChange, onExport }) => {
+const TransactionFilters = ({ onFilterChange }) => {
   const now = new Date();
   const currentYear = now.getFullYear();
   const currentMonth = now.getMonth();
@@ -23,8 +23,7 @@ const TransactionFilters = ({ onFilterChange, onExport }) => {
             <option key={i} value={currentYear - i}>{currentYear - i}</option>
           ))}
         </select>
-        <button onClick={onExport} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium">Export as CSV</button>
-      </div>
+        </div>
     </div>
   );
 };

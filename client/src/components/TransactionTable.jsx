@@ -1,6 +1,8 @@
 const TransactionTable = ({ transactions }) => {
   const formatCurrency = (amount) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
 
+  const totalAmount = transactions.reduce((sum, t) => sum + t.amount, 0);
+
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full bg-white">
@@ -30,6 +32,12 @@ const TransactionTable = ({ transactions }) => {
             </tr>
           )}
         </tbody>
+        <tfoot>
+          <tr className="bg-gray-100">
+            <td colSpan="4" className="py-3 px-4 text-right text-base font-semibold text-gray-700">Total Amount:</td>
+            <td className="py-3 px-4 text-right text-base font-bold text-blue-600">{formatCurrency(totalAmount)}</td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   );
