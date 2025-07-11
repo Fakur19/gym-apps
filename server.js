@@ -7,11 +7,8 @@ const path = require('path');
 
 const app = express();
 
-// CORS Configuration
-const isProduction = process.env.NODE_ENV === 'production';
-const allowedOrigins = isProduction 
-  ? ['https://gym-apps-itej.onrender.com'] // Correct production URL
-  : ['http://localhost:5173', 'http://127.0.0.1:5173'];
+// CORS Configuration using Environment Variables
+const allowedOrigins = (process.env.CORS_ALLOWED_ORIGINS || 'http://localhost:5173,http://127.0.0.1:5173').split(',');
 
 const corsOptions = {
   origin: (origin, callback) => {
