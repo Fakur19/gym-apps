@@ -8,27 +8,28 @@ const path = require('path');
 const app = express();
 
 // CORS Configuration
-if (process.env.NODE_ENV === 'production') {
-  // Production CORS: only allow the frontend URL
-  const allowedOrigins = ['https://gym-apps-itej.onrender.com'];
-  const corsOptions = {
-    origin: (origin, callback) => {
-      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
-  };
-  app.use(cors(corsOptions));
-} else {
-  // Development CORS: allow any origin
-  app.use(cors({
-    origin: '*', // Or specify your local dev URL e.g., 'http://localhost:5173'
-    credentials: true,
-  }));
-}
+const isProduction = process.env.NODE_ENV === 'production';
+const allowedOrigins = isProduction 
+  ? ['https://gym-apps-itej.onrender.com'] 
+  : ['http://localhost:5173', 'http://127.0.0.1:5173'];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like Postman) and from allowed origins
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  optionsSuccessStatus: 200 // Use 200 for broader compatibility
+};
+
+// Use CORS middleware and explicitly handle pre-flight requests
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
 
 // This route will be used by Render to confirm the server is live.
