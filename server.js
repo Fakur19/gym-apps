@@ -10,26 +10,35 @@ const app = express();
 // CORS Configuration
 const isProduction = process.env.NODE_ENV === 'production';
 const allowedOrigins = isProduction 
-  ? ['https://gym-apps-itej.onrender.com'] 
+  ? ['https://gym-apps-itej.onrender.com'] // Correct production URL
   : ['http://localhost:5173', 'http://127.0.0.1:5173'];
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (like Postman) and from allowed origins
+    // Allow requests with no origin (like mobile apps or curl) and from allowed origins
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      // Reject requests from other origins without crashing the server
       callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  optionsSuccessStatus: 200 // Use 200 for broader compatibility
+  optionsSuccessStatus: 200
 };
 
-// Use CORS middleware and explicitly handle pre-flight requests
+// Handle CORS
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+
+// Add a global error handler to prevent crashes from CORS errors
+app.use((err, req, res, next) => {
+  if (err.message === 'Not allowed by CORS') {
+    res.status(403).json({ error: 'CORS Error: This origin is not authorized.' });
+  } else {
+    next(err);
+  }
+});
 app.use(express.json());
 
 // This route will be used by Render to confirm the server is live.
