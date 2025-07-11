@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useToast } from '../context/ToastContext';
 import { getPlans, createPlan, updatePlan, deletePlan } from '../services/api';
 import AddPlanForm from '../components/AddPlanForm';
 import PlanList from '../components/PlanList';
@@ -8,6 +9,7 @@ const AdminView = () => {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { showToast } = useToast();
   
   // State for the edit modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,8 +36,9 @@ const AdminView = () => {
     try {
       const response = await createPlan(planData);
       setPlans([...plans, response.data]);
+      showToast('Membership plan added successfully!', 'success');
     } catch (err) {
-      alert('Error adding plan: ' + (err.response?.data?.msg || err.message));
+      showToast(err.response?.data?.msg || 'Error adding plan.', 'error');
     }
   };
 
@@ -50,8 +53,9 @@ const AdminView = () => {
       setPlans(plans.map(p => (p._id === id ? response.data : p)));
       setIsModalOpen(false);
       setSelectedPlan(null);
+      showToast('Membership plan updated successfully!', 'success');
     } catch (err) {
-      alert('Error updating plan: ' + (err.response?.data?.msg || err.message));
+      showToast(err.response?.data?.msg || 'Error updating plan.', 'error');
     }
   };
 
@@ -60,8 +64,9 @@ const AdminView = () => {
       try {
         await deletePlan(id);
         setPlans(plans.filter(p => p._id !== id));
+        showToast('Membership plan deleted successfully!', 'success');
       } catch (err) {
-        alert('Error deleting plan: ' + (err.response?.data?.msg || err.message));
+        showToast(err.response?.data?.msg || 'Error deleting plan.', 'error');
       }
     }
   };

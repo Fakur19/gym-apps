@@ -28,7 +28,9 @@ const TransactionTable = ({ transactions }) => {
             ))
           ) : (
             <tr>
-              <td colSpan="5" className="text-center py-4 text-gray-500">No transactions found for this period.</td>
+              <td colSpan="5" className="text-center py-4 text-gray-500">
+                No transactions found for this period. Adjust your filters or add new members.
+              </td>
             </tr>
           )}
         </tbody>

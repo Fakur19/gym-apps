@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useToast } from '../context/ToastContext';
 
 const RenewMemberModal = ({ isOpen, onClose, onSave, member, plans }) => {
   const [selectedPlanId, setSelectedPlanId] = useState('');
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (plans && plans.length > 0) {
@@ -13,8 +15,14 @@ const RenewMemberModal = ({ isOpen, onClose, onSave, member, plans }) => {
 
   const formatCurrency = (amount) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
 
-  const handleSave = () => {
-    onSave(member._id, selectedPlanId);
+  const handleSave = async () => {
+    try {
+      await onSave(member._id, selectedPlanId);
+      showToast('Membership renewed successfully!', 'success');
+      onClose();
+    } catch (error) {
+      showToast(error.response?.data?.msg || 'Failed to renew membership.', 'error');
+    }
   };
 
   return (

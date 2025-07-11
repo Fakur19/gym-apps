@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useToast } from '../context/ToastContext';
 
 const EditPlanModal = ({ plan, isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({ name: '', durationInMonths: '', price: '' });
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (plan) {
@@ -19,9 +21,15 @@ const EditPlanModal = ({ plan, isOpen, onClose, onSave }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSave(plan._id, formData);
+    try {
+      await onSave(plan._id, formData);
+      showToast('Membership plan updated successfully!', 'success');
+      onClose();
+    } catch (error) {
+      showToast(error.response?.data?.msg || 'Failed to update membership plan.', 'error');
+    }
   };
 
   return (

@@ -1,21 +1,28 @@
 import { useState } from 'react';
+import { useToast } from '../context/ToastContext';
 
 const AddPlanForm = ({ onPlanAdded }) => {
   const [name, setName] = useState('');
   const [duration, setDuration] = useState('');
   const [price, setPrice] = useState('');
+  const { showToast } = useToast();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const planData = {
       name,
       durationInMonths: parseInt(duration),
       price: parseInt(price)
     };
-    onPlanAdded(planData);
-    setName('');
-    setDuration('');
-    setPrice('');
+    try {
+      await onPlanAdded(planData);
+      showToast('Membership plan added successfully!', 'success');
+      setName('');
+      setDuration('');
+      setPrice('');
+    } catch (error) {
+      showToast(error.response?.data?.msg || 'Failed to add membership plan.', 'error');
+    }
   };
 
   return (

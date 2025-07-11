@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useToast } from '../context/ToastContext';
 
 const EditMemberModal = ({ isOpen, onClose, onSave, member }) => {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
-  const [error, setError] = useState('');
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (member) {
@@ -11,7 +12,6 @@ const EditMemberModal = ({ isOpen, onClose, onSave, member }) => {
         email: member.email,
         phone: member.phone || '',
       });
-      setError(''); // Clear previous errors
     }
   }, [member]);
 
@@ -21,9 +21,15 @@ const EditMemberModal = ({ isOpen, onClose, onSave, member }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSave(member._id, formData, setError);
+    try {
+      await onSave(member._id, formData);
+      showToast('Member updated successfully!', 'success');
+      onClose();
+    } catch (error) {
+      showToast(error.response?.data?.msg || 'Failed to update member.', 'error');
+    }
   };
 
   return (
@@ -44,7 +50,6 @@ const EditMemberModal = ({ isOpen, onClose, onSave, member }) => {
               <label htmlFor="edit-phone" className="block text-sm font-medium text-gray-700">Phone Number</label>
               <input type="tel" id="edit-phone" name="phone" value={formData.phone} onChange={handleChange} className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm" />
             </div>
-            {error && <p className="text-center text-sm text-red-500">{error}</p>}
             <div className="items-center px-4 py-3 space-y-2">
               <button type="submit" className="w-full px-4 py-2 bg-blue-600 text-white text-base font-medium rounded-md shadow-sm hover:bg-blue-700">Save Changes</button>
               <button type="button" onClick={onClose} className="w-full px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-md shadow-sm hover:bg-gray-400">Cancel</button>

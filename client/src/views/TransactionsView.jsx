@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { getTransactions } from '../services/api';
 import TransactionFilters from '../components/TransactionFilters';
 import TransactionTable from '../components/TransactionTable';
+import Spinner from '../components/Spinner';
 
 const TransactionsView = () => {
   const [allTransactions, setAllTransactions] = useState([]);
@@ -35,7 +36,7 @@ const TransactionsView = () => {
     });
   }, [allTransactions, filters]);
 
-  if (loading) return <p>Loading transactions...</p>;
+  if (loading) return <Spinner />;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (

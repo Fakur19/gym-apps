@@ -5,6 +5,7 @@ import KpiCard from '../components/KpiCard';
 import ChartCard from '../components/ChartCard';
 import ExpiringMembersList from '../components/ExpiringMembersList';
 import { FaMoneyBillWave, FaSignInAlt, FaUserCheck, FaUserPlus } from 'react-icons/fa';
+import Spinner from '../components/Spinner';
 
 const DashboardView = () => {
   const [stats, setStats] = useState(null);
@@ -108,7 +109,7 @@ const DashboardView = () => {
     e.target.classList.add('active-chart-toggle');
   };
 
-  if (loading) return <p>Loading Dashboard...</p>;
+  if (loading) return <Spinner />;
   if (error) return <p className="text-red-500">{error}</p>;
   if (!stats) return null;
 

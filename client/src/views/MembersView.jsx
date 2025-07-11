@@ -1,10 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useToast } from '../context/ToastContext';
 import { getMembers, getPlans, getTodaysCheckins, addMember, updateMember, renewMember, createCheckin } from '../services/api';
 import RegistrationForm from '../components/RegistrationForm';
 import AttendanceList from '../components/AttendanceList';
 import MemberTable from '../components/MemberTable';
 import RenewMemberModal from '../components/RenewMemberModal';
 import EditMemberModal from '../components/EditMemberModal';
+import Spinner from '../components/Spinner';
 
 const MembersView = ({ onNavigate }) => {
   const [members, setMembers] = useState([]);
@@ -12,6 +14,7 @@ const MembersView = ({ onNavigate }) => {
   const [checkins, setCheckins] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { showToast } = useToast();
 
   // UI State
   const [searchTerm, setSearchTerm] = useState('');
@@ -86,8 +89,9 @@ const MembersView = ({ onNavigate }) => {
     try {
       const response = await addMember(memberData);
       setMembers([response.data, ...members]);
+      showToast('Member added successfully!', 'success');
     } catch (err) {
-      alert('Error adding member: ' + (err.response?.data?.msg || err.message));
+      showToast(err.response?.data?.msg || 'Error adding member.', 'error');
     }
   };
 
@@ -96,8 +100,9 @@ const MembersView = ({ onNavigate }) => {
       const response = await renewMember(memberId, planId);
       setMembers(members.map(m => m._id === memberId ? response.data : m));
       setIsRenewModalOpen(false);
+      showToast('Membership renewed successfully!', 'success');
     } catch (err) {
-      alert('Error renewing membership: ' + (err.response?.data?.msg || err.message));
+      showToast(err.response?.data?.msg || 'Error renewing membership.', 'error');
     }
   };
 
@@ -141,8 +146,9 @@ const MembersView = ({ onNavigate }) => {
         await createCheckin(member._id);
         const newCheckin = { _id: new Date().toISOString(), memberName: member.name, checkInTime: new Date() };
         setCheckins([newCheckin, ...checkins]);
+        showToast('Member checked in successfully!', 'success');
       } catch (err) {
-        alert('Error checking in: ' + (err.response?.data?.msg || err.message));
+        showToast(err.response?.data?.msg || 'Error checking in.', 'error');
       }
     } else if (action === 'renew') {
       setSelectedMember(member);
@@ -155,7 +161,7 @@ const MembersView = ({ onNavigate }) => {
     }
   };
 
-  if (loading) return <p>Loading members...</p>;
+  if (loading) return <Spinner />;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (

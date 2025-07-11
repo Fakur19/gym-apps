@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useToast } from '../context/ToastContext';
 
 const RegistrationForm = ({ plans, onMemberAdded }) => {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', planId: '' });
+  const { showToast } = useToast();
 
   const formatCurrency = (amount) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
 
@@ -9,14 +11,19 @@ const RegistrationForm = ({ plans, onMemberAdded }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.planId) {
-      alert('Please select a membership plan.');
+      showToast('Please select a membership plan.', 'error');
       return;
     }
-    onMemberAdded(formData);
-    setFormData({ name: '', email: '', phone: '', planId: '' }); // Reset form
+    try {
+      await onMemberAdded(formData);
+      showToast('Member registered successfully!', 'success');
+      setFormData({ name: '', email: '', phone: '', planId: '' }); // Reset form
+    } catch (error) {
+      showToast(error.response?.data?.msg || 'Failed to register member.', 'error');
+    }
   };
 
   return (
