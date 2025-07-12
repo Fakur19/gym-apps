@@ -9,7 +9,7 @@ exports.addMember = async (req, res) => {
 
     // Ensure sparse index works correctly by converting empty email string to null
     if (email === '') {
-      email = null;
+      email = undefined;
     }
 
     if (!name || !phone || !planId) {
@@ -164,7 +164,7 @@ exports.updateMember = async (req, res) => {
 
         // Ensure sparse index works correctly by converting empty email string to null
         if (email === '') {
-            email = null;
+            email = undefined;
         }
 
         const member = await Member.findById(memberId);
