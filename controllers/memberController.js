@@ -4,7 +4,13 @@ const Transaction = require('../models/Transaction'); // New
 // Add a new member
 exports.addMember = async (req, res) => {
   try {
-    const { name, email, phone, planId } = req.body;
+    const { name, phone, planId } = req.body;
+    let { email } = req.body;
+
+    // Ensure sparse index works correctly by converting empty email string to null
+    if (email === '') {
+      email = null;
+    }
 
     if (!name || !phone || !planId) {
       return res.status(400).json({ msg: 'Please enter all required fields' });
@@ -59,7 +65,15 @@ exports.addMember = async (req, res) => {
   } catch (err) {
     console.error(err.message);
     if (err.code === 11000) {
-        return res.status(400).json({ msg: 'A member with this email already exists.' });
+        let message;
+        if (err.message.includes('email')) {
+            message = 'A member with this email already exists.';
+        } else if (err.message.includes('phone')) {
+            message = 'A member with this phone number already exists.';
+        } else {
+            message = 'A member with this value already exists.';
+        }
+        return res.status(400).json({ msg: message });
     }
     res.status(500).send('Server Error');
   }
@@ -139,22 +153,23 @@ exports.renewMember = async (req, res) => {
 // === NEW FUNCTION TO UPDATE MEMBER DETAILS ===
 exports.updateMember = async (req, res) => {
     try {
-        const { name, email, phone } = req.body;
+        const { name, phone } = req.body;
+        let { email } = req.body;
         const memberId = req.params.id;
 
-        if (!name || !email) {
-            return res.status(400).json({ msg: 'Name and email are required.' });
+        // Basic validation
+        if (!name || !phone) {
+            return res.status(400).json({ msg: 'Name and phone number are required.' });
+        }
+
+        // Ensure sparse index works correctly by converting empty email string to null
+        if (email === '') {
+            email = null;
         }
 
         const member = await Member.findById(memberId);
         if (!member) {
             return res.status(404).json({ msg: 'Member not found.' });
-        }
-
-        // Check if the new email is already taken by another member
-        const existingMemberWithEmail = await Member.findOne({ email: email, _id: { $ne: memberId } });
-        if (existingMemberWithEmail) {
-            return res.status(400).json({ msg: 'This email is already in use by another member.' });
         }
 
         member.name = name;
@@ -166,6 +181,18 @@ exports.updateMember = async (req, res) => {
 
     } catch (err) {
         console.error(err.message);
+        // Handle duplicate key errors from the database
+        if (err.code === 11000) {
+            let message;
+            if (err.message.includes('email')) {
+                message = 'This email is already in use by another member.';
+            } else if (err.message.includes('phone')) {
+                message = 'This phone number is already in use by another member.';
+            } else {
+                message = 'A member with this value already exists.';
+            }
+            return res.status(400).json({ msg: message });
+        }
         res.status(500).send('Server Error');
     }
 };

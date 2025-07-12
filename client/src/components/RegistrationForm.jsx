@@ -19,10 +19,11 @@ const RegistrationForm = ({ plans, onMemberAdded }) => {
     }
     try {
       await onMemberAdded(formData);
-      showToast('Member registered successfully!', 'success');
-      setFormData({ name: '', email: '', phone: '', planId: '' }); // Reset form
+      // The success toast is now handled by the parent component.
+      setFormData({ name: '', email: '', phone: '', planId: '' }); // Reset form on success
     } catch (error) {
-      showToast(error.response?.data?.msg || 'Failed to register member.', 'error');
+      // The error toast is now handled by the parent.
+      // The form no longer needs to show its own error toast.
     }
   };
 

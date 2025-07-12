@@ -3,8 +3,8 @@ const Schema = mongoose.Schema;
 
 const MemberSchema = new Schema({
   name: { type: String, required: true },
-  email: { type: String },
-  phone: { type: String, required: true},
+  email: { type: String, unique: true, sparse: true },
+  phone: { type: String, required: true, unique: true },
   joinDate: { type: Date, default: Date.now },
   membership: {
     plan: { type: Schema.Types.ObjectId, ref: 'MembershipPlan', required: true },

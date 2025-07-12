@@ -92,6 +92,8 @@ const MembersView = ({ onNavigate }) => {
       showToast('Member added successfully!', 'success');
     } catch (err) {
       showToast(err.response?.data?.msg || 'Error adding member.', 'error');
+      // Re-throw the error to be caught by the form
+      throw err;
     }
   };
 

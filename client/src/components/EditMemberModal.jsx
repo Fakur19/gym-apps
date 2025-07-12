@@ -44,7 +44,7 @@ const EditMemberModal = ({ isOpen, onClose, onSave, member }) => {
             </div>
             <div>
               <label htmlFor="edit-email" className="block text-sm font-medium text-gray-700">Email Address</label>
-              <input type="email" id="edit-email" name="email" value={formData.email} onChange={handleChange} className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm" required />
+              <input type="email" id="edit-email" name="email" value={formData.email} onChange={handleChange} className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm" />
             </div>
             <div>
               <label htmlFor="edit-phone" className="block text-sm font-medium text-gray-700">Phone Number</label>

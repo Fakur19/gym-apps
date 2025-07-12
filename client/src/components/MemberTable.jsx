@@ -16,7 +16,7 @@ const MemberTable = ({ members, onAction }) => {
               <tr key={member._id} className="hover:bg-gray-50">
                 <td className="py-4 px-4 whitespace-nowrap">
                   <div className="font-medium text-gray-900">{member.name}</div>
-                  <div className="text-sm text-gray-500">{member.email}</div>
+                  {/* <div className="text-sm text-gray-500">{member.email}</div> */}
                 </td>
                 <td className="py-4 px-4 whitespace-nowrap text-sm text-gray-500">{new Date(member.membership.endDate).toLocaleDateString('en-GB')}</td>
                 <td className="py-4 px-4 whitespace-nowrap">
