@@ -5,6 +5,7 @@ import { useToast } from '../context/ToastContext';
 const PosView = () => {
   const [foods, setFoods] = useState([]);
   const [cart, setCart] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -61,12 +62,25 @@ const PosView = () => {
     }
   };
 
+  const filteredFoods = foods.filter((food) =>
+    food.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
-        <h1 className="text-2xl font-bold mb-4">Point of Sale</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-bold">Point of Sale</h1>
+          <input
+            type="text"
+            placeholder="Search for food..."
+            className="p-2 border rounded"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {foods.map((food) => (
+          {filteredFoods.map((food) => (
             <div
               key={food._id}
               className="p-4 border rounded cursor-pointer hover:bg-gray-200"

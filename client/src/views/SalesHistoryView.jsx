@@ -4,6 +4,7 @@ import { useToast } from '../context/ToastContext';
 
 const SalesHistoryView = () => {
   const [sales, setSales] = useState([]);
+  const [filter, setFilter] = useState('all'); // 'all', 'day', 'week', 'month'
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -19,9 +20,38 @@ const SalesHistoryView = () => {
     }
   };
 
+  const getFilteredSales = () => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    switch (filter) {
+      case 'day':
+        return sales.filter(sale => new Date(sale.createdAt) >= today);
+      case 'week':
+        const oneWeekAgo = new Date(today);
+        oneWeekAgo.setDate(today.getDate() - 7);
+        return sales.filter(sale => new Date(sale.createdAt) >= oneWeekAgo);
+      case 'month':
+        const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        return sales.filter(sale => new Date(sale.createdAt) >= firstDayOfMonth);
+      default:
+        return sales;
+    }
+  };
+
+  const filteredSales = getFilteredSales();
+
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">Sales History</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Sales History</h1>
+        <div className="flex space-x-2">
+          <button onClick={() => setFilter('all')} className={`p-2 rounded ${filter === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>All</button>
+          <button onClick={() => setFilter('day')} className={`p-2 rounded ${filter === 'day' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>Day</button>
+          <button onClick={() => setFilter('week')} className={`p-2 rounded ${filter === 'week' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>Week</button>
+          <button onClick={() => setFilter('month')} className={`p-2 rounded ${filter === 'month' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>Month</button>
+        </div>
+      </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white">
           <thead>
@@ -32,7 +62,7 @@ const SalesHistoryView = () => {
             </tr>
           </thead>
           <tbody>
-            {sales.map((sale) => (
+            {filteredSales.map((sale) => (
               <tr key={sale._id}>
                 <td className="py-2 px-4 border-b">{new Date(sale.createdAt).toLocaleString()}</td>
                 <td className="py-2 px-4 border-b">

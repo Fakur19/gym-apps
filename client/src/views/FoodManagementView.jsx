@@ -7,6 +7,7 @@ const FoodManagementView = () => {
   const [food, setFood] = useState({ name: '', price: '', stock: '' });
   const [isEditing, setIsEditing] = useState(false);
   const [currentFoodId, setCurrentFoodId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -70,6 +71,10 @@ const FoodManagementView = () => {
     setFood({ name: '', price: '', stock: '' });
   };
 
+  const filteredFoods = foods.filter((food) =>
+    food.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">Food Management</h1>
@@ -115,7 +120,16 @@ const FoodManagementView = () => {
         </div>
       </form>
       <div>
-        <h2 className="text-xl font-bold mb-2">Food List</h2>
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-xl font-bold">Food List</h2>
+          <input
+            type="text"
+            placeholder="Search by name..."
+            className="p-2 border rounded"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white">
             <thead>
@@ -127,7 +141,7 @@ const FoodManagementView = () => {
               </tr>
             </thead>
             <tbody>
-              {foods.map((food) => (
+              {filteredFoods.map((food) => (
                 <tr key={food._id}>
                   <td className="py-2 px-4 border-b">{food.name}</td>
                   <td className="py-2 px-4 border-b">{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(food.price)}</td>
