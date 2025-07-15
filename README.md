@@ -7,6 +7,10 @@ A full-stack web application designed to manage gym operations, including member
 ![mockup1](https://github.com/user-attachments/assets/8bf060ce-d7ad-4569-afc8-dd6d977a9769)
 
 [Demo Apps](https://gym-apps-itej.onrender.com/)
+
+Login:
+- Email : admin@example.com
+- Password : adminpassword
 ## Features
 
 - **Dashboard:** At-a-glance view of key metrics like daily revenue, check-ins, active members, and expiring memberships.
