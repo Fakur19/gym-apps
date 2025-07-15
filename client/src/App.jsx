@@ -12,6 +12,9 @@ import AdminView from './views/AdminView';
 import LoginView from './views/LoginView';
 import Clock from './components/Clock';
 import { ToastProvider } from './context/ToastContext';
+import FoodManagementView from './views/FoodManagementView';
+import PosView from './views/PosView';
+import SalesHistoryView from './views/SalesHistoryView';
 
 function App() {
   const [auth, setAuth] = useState({
@@ -151,6 +154,9 @@ function App() {
               <Route path="/members" element={<ProtectedRoute><MembersView /></ProtectedRoute>} />
               <Route path="/transactions" element={<ProtectedRoute><TransactionsView /></ProtectedRoute>} />
               <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><AdminView /></ProtectedRoute>} />
+              <Route path="/food" element={<ProtectedRoute allowedRoles={['admin']}><FoodManagementView /></ProtectedRoute>} />
+              <Route path="/pos" element={<ProtectedRoute><PosView /></ProtectedRoute>} />
+              <Route path="/sales" element={<ProtectedRoute><SalesHistoryView /></ProtectedRoute>} />
               {/* Redirect any unmatched routes to dashboard or login */}
               <Route path="*" element={auth.isAuthenticated ? <DashboardView /> : <LoginView setAuth={setAuth} />} />
             </Routes>

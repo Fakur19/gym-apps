@@ -1,4 +1,4 @@
-import { FaTachometerAlt, FaUsers, FaFileInvoiceDollar, FaCogs, FaChevronLeft, FaChevronRight, FaSignOutAlt } from 'react-icons/fa';
+import { FaTachometerAlt, FaUsers, FaFileInvoiceDollar, FaCogs, FaChevronLeft, FaChevronRight, FaSignOutAlt, FaUtensils, FaCashRegister, FaHistory } from 'react-icons/fa';
 
 const NavLink = ({ id, icon, text, activeView, onClick, isCollapsed }) => {
   const isActive = activeView === id;
@@ -28,9 +28,12 @@ const Sidebar = ({ setActiveView, activeView, isCollapsed, handleLogout, userRol
     { id: 'dashboard', text: 'Dashboard', icon: <FaTachometerAlt className="w-5 h-5 flex-shrink-0" /> },
     { id: 'members', text: 'Members', icon: <FaUsers className="w-5 h-5 flex-shrink-0" /> },
     { id: 'transactions', text: 'Transactions', icon: <FaFileInvoiceDollar className="w-5 h-5 flex-shrink-0" /> },
+    { id: 'pos', text: 'POS', icon: <FaCashRegister className="w-5 h-5 flex-shrink-0" /> },
+    { id: 'sales', text: 'Sales History', icon: <FaHistory className="w-5 h-5 flex-shrink-0" /> },
   ];
 
   if (userRole === 'admin') {
+    navItems.push({ id: 'food', text: 'Food Management', icon: <FaUtensils className="w-5 h-5 flex-shrink-0" /> });
     navItems.push({ id: 'admin', text: 'Admin', icon: <FaCogs className="w-5 h-5 flex-shrink-0" /> });
   }
 

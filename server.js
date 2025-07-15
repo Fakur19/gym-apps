@@ -51,6 +51,8 @@ const planRoutes = require('./routes/planRoutes');
 const checkinRoutes = require('./routes/checkinRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const transactionsRoutes = require('./routes/transactionsRoutes');
+const foodRoutes = require('./routes/foodRoutes');
+const saleRoutes = require('./routes/saleRoutes');
 const { protect, authorize } = require('./middleware/authMiddleware');
 
 app.use('/api/auth', authRoutes);
@@ -59,6 +61,8 @@ app.use('/api/plans', protect, planRoutes);
 app.use('/api/checkins', protect, checkinRoutes);
 app.use('/api/dashboard', protect, dashboardRoutes);
 app.use('/api/transactions', protect, transactionsRoutes);
+app.use('/api/foods', foodRoutes);
+app.use('/api/sales', saleRoutes);
 
 // --- Serve React App in Production ---
 if (process.env.NODE_ENV === 'production') {
