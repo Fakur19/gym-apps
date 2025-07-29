@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useToast } from '../context/ToastContext';
 
 const PosView = () => {
+  const { t } = useTranslation();
   const [foods, setFoods] = useState([]);
   const [cart, setCart] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,7 +19,7 @@ const PosView = () => {
       const { data } = await axios.get('/foods');
       setFoods(data.data);
     } catch (error) {
-      showToast('Error fetching foods', 'error');
+      showToast(t('error_fetching_foods'), 'error');
     }
   };
 
@@ -54,11 +56,11 @@ const PosView = () => {
   const handleCheckout = async () => {
     try {
       await axios.post('/sales', { items: cart });
-      showToast('Sale completed successfully', 'success');
+      showToast(t('sale_completed_success'), 'success');
       setCart([]);
       fetchFoods(); // Refetch foods to update stock
     } catch (error) {
-      showToast(error.response?.data?.error || 'Error completing sale', 'error');
+      showToast(error.response?.data?.error || t('error_completing_sale'), 'error');
     }
   };
 
@@ -70,10 +72,10 @@ const PosView = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">Point of Sale</h1>
+          <h1 className="text-2xl font-bold">{t('point_of_sale')}</h1>
           <input
             type="text"
-            placeholder="Search for food..."
+            placeholder={t('search_products')}
             className="p-2 border rounded"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -88,16 +90,16 @@ const PosView = () => {
             >
               <h3 className="font-bold">{food.name}</h3>
               <p>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(food.price)}</p>
-              <p>Stock: {food.stock}</p>
+              <p>{t('stock')}: {food.stock}</p>
             </div>
           ))}
         </div>
       </div>
       <div>
-        <h1 className="text-2xl font-bold mb-4">Cart</h1>
+        <h1 className="text-2xl font-bold mb-4">{t('cart')}</h1>
         <div className="bg-white p-4 rounded">
           {cart.length === 0 ? (
-            <p>Cart is empty</p>
+            <p>{t('no_items_in_cart')}</p>
           ) : (
             <>
               {cart.map((item) => (
@@ -114,21 +116,21 @@ const PosView = () => {
                       className="w-16 p-1 border rounded mx-2"
                     />
                     <button onClick={() => removeFromCart(item.foodId)} className="text-red-500">
-                      Remove
+                      {t('delete')}
                     </button>
                   </div>
                 </div>
               ))}
               <hr className="my-4" />
               <div className="flex justify-between font-bold text-xl">
-                <span>Total:</span>
+                <span>{t('total')}:</span>
                 <span>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(getTotal())}</span>
               </div>
               <button
                 onClick={handleCheckout}
                 className="bg-green-500 text-white p-2 rounded w-full mt-4"
               >
-                Checkout
+                {t('checkout')}
               </button>
             </>
           )}

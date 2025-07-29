@@ -1,12 +1,15 @@
+import { useTranslation } from 'react-i18next';
+
 const AttendanceList = ({ checkins }) => {
+  const { t } = useTranslation();
   const formatTime = (date) => new Date(date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-md">
-      <h2 className="text-xl font-semibold mb-4 text-gray-700">Today's Attendance</h2>
+      <h2 className="text-xl font-semibold mb-4 text-gray-700">{t('todays_attendance')}</h2>
       <div className="space-y-2 max-h-96 overflow-y-auto">
         {!checkins || checkins.length === 0 ? (
-          <p className="text-gray-500 text-center">No check-ins yet today.</p>
+          <p className="text-gray-500 text-center">{t('no_checkins_yet')}</p>
         ) : (
           checkins.slice(0, 5).map(checkin => (
             <div key={checkin._id} className="flex justify-between items-center bg-gray-50 p-2 rounded">

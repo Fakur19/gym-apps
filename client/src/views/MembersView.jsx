@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useToast } from '../context/ToastContext';
 import { getMembers, getPlans, getTodaysCheckins, addMember, updateMember, renewMember, createCheckin } from '../services/api';
 import RegistrationForm from '../components/RegistrationForm';
@@ -9,6 +10,7 @@ import EditMemberModal from '../components/EditMemberModal';
 import Spinner from '../components/Spinner';
 
 const MembersView = ({ onNavigate }) => {
+  const { t, i18n } = useTranslation();
   const [members, setMembers] = useState([]);
   const [plans, setPlans] = useState([]);
   const [checkins, setCheckins] = useState([]);
@@ -89,9 +91,9 @@ const MembersView = ({ onNavigate }) => {
     try {
       const response = await addMember(memberData);
       setMembers([response.data, ...members]);
-      showToast('Member added successfully!', 'success');
+      showToast(t('add_member_success'), 'success');
     } catch (err) {
-      showToast(err.response?.data?.msg || 'Error adding member.', 'error');
+      showToast(err.response?.data?.msg || t('add_member_error'), 'error');
       // Re-throw the error to be caught by the form
       throw err;
     }
@@ -102,9 +104,9 @@ const MembersView = ({ onNavigate }) => {
       const response = await renewMember(memberId, planId);
       setMembers(members.map(m => m._id === memberId ? response.data : m));
       setIsRenewModalOpen(false);
-      showToast('Membership renewed successfully!', 'success');
+      showToast(t('renew_success'), 'success');
     } catch (err) {
-      showToast(err.response?.data?.msg || 'Error renewing membership.', 'error');
+      showToast(err.response?.data?.msg || t('renew_error'), 'error');
     }
   };
 
@@ -148,9 +150,9 @@ const MembersView = ({ onNavigate }) => {
         const response = await createCheckin(member._id);
         const newCheckin = response.data;
         setCheckins([newCheckin, ...checkins]);
-        showToast('Member checked in successfully!', 'success');
+        showToast(t('checkin_success'), 'success');
       } catch (err) {
-        showToast(err.response?.data?.msg || 'Error checking in.', 'error');
+        showToast(err.response?.data?.msg || t('checkin_error'), 'error');
       }
     } else if (action === 'renew') {
       setSelectedMember(member);
@@ -168,7 +170,7 @@ const MembersView = ({ onNavigate }) => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Member Management</h1>
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">{t('member_management')}</h1>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1 flex flex-col gap-8">
           <RegistrationForm plans={plans} onMemberAdded={handleAddMember} />
@@ -176,45 +178,45 @@ const MembersView = ({ onNavigate }) => {
         </div>
         <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-md">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-gray-700">Current Members</h2>
+            <h2 className="text-xl font-semibold text-gray-700">{t('current_members')}</h2>
             <input
               type="text"
-              placeholder="Search..."
+              placeholder={t('search')}
               value={searchTerm}
               onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
               className="w-1/2 px-3 py-2 border border-gray-300 rounded-md shadow-sm"
             />
           </div>
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-sm font-medium text-gray-600">Filter:</span>
+            <span className="text-sm font-medium text-gray-600">{t('filter')}</span>
             {['all', 'active', 'expired'].map(f => (
               <button
                 key={f}
                 onClick={() => { setFilter(f); setCurrentPage(1); }}
                 className={`px-3 py-1 rounded-full text-sm ${filter === f ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 border'}`}
               >
-                {f.charAt(0).toUpperCase() + f.slice(1)}
+                {t(f)}
               </button>
             ))}
           </div>
-          <MemberTable members={paginatedMembers.members} onAction={handleTableAction} />
+          <MemberTable members={paginatedMembers.members} onAction={handleTableAction} t={t} />
           <div className="flex justify-between items-center mt-4">
             <button
               onClick={() => setCurrentPage(p => p - 1)}
               disabled={currentPage === 1}
               className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 disabled:bg-gray-200 disabled:cursor-not-allowed"
             >
-              Previous
+              {t('previous')}
             </button>
             <span className="text-sm text-gray-700">
-              Page {currentPage} of {paginatedMembers.totalPages || 1}
+              {t('page_of', { currentPage: currentPage, totalPages: paginatedMembers.totalPages || 1 })}
             </span>
             <button
               onClick={() => setCurrentPage(p => p + 1)}
               disabled={currentPage >= paginatedMembers.totalPages}
               className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 disabled:bg-gray-200 disabled:cursor-not-allowed"
             >
-              Next
+              {t('next')}
             </button>
           </div>
         </div>

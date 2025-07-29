@@ -1,6 +1,10 @@
+import { useTranslation } from 'react-i18next';
+
 const ExpiringMembersList = ({ members }) => {
+  const { t } = useTranslation();
+
   if (!members || members.length === 0) {
-    return <p className="text-gray-500 text-center">No memberships are expiring in the next 7 days.</p>;
+    return <p className="text-gray-500 text-center">{t('no_members_expiring_soon')}</p>;
   }
 
   return (
@@ -12,7 +16,7 @@ const ExpiringMembersList = ({ members }) => {
             <p className="text-sm text-gray-500">{member.email}</p>
           </div>
           <div className="text-right">
-            <p className="font-medium text-red-600">Expires</p>
+            <p className="font-medium text-red-600">{t('expires_on')}</p>
             <p className="text-sm text-red-500">{new Date(member.membership.endDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long' })}</p>
           </div>
         </div>

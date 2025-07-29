@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useToast } from '../context/ToastContext';
 import { getPlans, createPlan, updatePlan, deletePlan } from '../services/api';
 import AddPlanForm from '../components/AddPlanForm';
@@ -6,6 +7,7 @@ import PlanList from '../components/PlanList';
 import EditPlanModal from '../components/EditPlanModal';
 
 const AdminView = () => {
+  const { t } = useTranslation();
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -21,7 +23,7 @@ const AdminView = () => {
       const response = await getPlans();
       setPlans(response.data);
     } catch (err) {
-      setError('Failed to fetch plans.');
+      setError(t('no_plans_found'));
       console.error(err);
     } finally {
       setLoading(false);
@@ -30,15 +32,15 @@ const AdminView = () => {
 
   useEffect(() => {
     fetchPlans();
-  }, []);
+  }, [t]);
 
   const handleAddPlan = async (planData) => {
     try {
       const response = await createPlan(planData);
       setPlans([...plans, response.data]);
-      showToast('Membership plan added successfully!', 'success');
+      showToast(t('add_plan_success'), 'success');
     } catch (err) {
-      showToast(err.response?.data?.msg || 'Error adding plan.', 'error');
+      showToast(err.response?.data?.msg || t('add_plan_error'), 'error');
     }
   };
 
@@ -53,30 +55,30 @@ const AdminView = () => {
       setPlans(plans.map(p => (p._id === id ? response.data : p)));
       setIsModalOpen(false);
       setSelectedPlan(null);
-      showToast('Membership plan updated successfully!', 'success');
+      showToast(t('update_plan_success'), 'success');
     } catch (err) {
-      showToast(err.response?.data?.msg || 'Error updating plan.', 'error');
+      showToast(err.response?.data?.msg || t('update_plan_error'), 'error');
     }
   };
 
   const handleDeletePlan = async (id) => {
-    if (window.confirm('Are you sure you want to delete this plan? This cannot be undone.')) {
+    if (window.confirm(t('delete_plan_confirm'))) {
       try {
         await deletePlan(id);
         setPlans(plans.filter(p => p._id !== id));
-        showToast('Membership plan deleted successfully!', 'success');
+        showToast(t('delete_plan_success'), 'success');
       } catch (err) {
-        showToast(err.response?.data?.msg || 'Error deleting plan.', 'error');
+        showToast(err.response?.data?.msg || t('delete_plan_error'), 'error');
       }
     }
   };
 
-  if (loading) return <p>Loading admin settings...</p>;
+  if (loading) return <p>{t('loading_admin_settings')}</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Admin Settings</h1>
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">{t('admin_panel')}</h1>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1">
           <AddPlanForm onPlanAdded={handleAddPlan} />

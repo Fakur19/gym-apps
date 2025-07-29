@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 
 import './services/api'; // Import to initialize Axios base URL
@@ -17,6 +18,7 @@ import PosView from './views/PosView';
 import SalesHistoryView from './views/SalesHistoryView';
 
 function App() {
+  const { i18n } = useTranslation();
   const [auth, setAuth] = useState({
     isAuthenticated: false,
     user: null,
@@ -134,12 +136,28 @@ function App() {
         <div className="flex-1 flex flex-col overflow-hidden">
           {auth.isAuthenticated && (
             <header className="bg-white shadow-sm h-16 flex items-center justify-between px-6">
-              <button
-                onClick={toggleSidebar}
-                className="text-gray-600 focus:outline-none md:hidden"
-              >
-                <FaBars className="h-6 w-6" />
-              </button>
+              <div className="flex items-center">
+                <button
+                  onClick={toggleSidebar}
+                  className="text-gray-600 focus:outline-none md:hidden mr-4"
+                >
+                  <FaBars className="h-6 w-6" />
+                </button>
+                <div>
+                  <button 
+                    onClick={() => i18n.changeLanguage('en')} 
+                    className={`px-3 py-1 text-sm rounded mr-2 ${i18n.language === 'en' ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+                  >
+                    EN
+                  </button>
+                  <button 
+                    onClick={() => i18n.changeLanguage('id')} 
+                    className={`px-3 py-1 text-sm rounded ${i18n.language === 'id' ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+                  >
+                    ID
+                  </button>
+                </div>
+              </div>
               <div className="ml-auto">
                 <Clock />
               </div>

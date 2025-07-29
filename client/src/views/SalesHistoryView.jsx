@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useToast } from '../context/ToastContext';
 
 const SalesHistoryView = () => {
+  const { t } = useTranslation();
   const [sales, setSales] = useState([]);
   const [filter, setFilter] = useState('all'); // 'all', 'day', 'week', 'month'
   const { showToast } = useToast();
@@ -16,7 +18,7 @@ const SalesHistoryView = () => {
       const { data } = await axios.get('/sales');
       setSales(data.data);
     } catch (error) {
-      showToast('Error fetching sales history', 'error');
+      showToast(t('error_fetching_sales'), 'error');
     }
   };
 
@@ -44,21 +46,21 @@ const SalesHistoryView = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Sales History</h1>
+        <h1 className="text-2xl font-bold">{t('sales_history')}</h1>
         <div className="flex space-x-2">
-          <button onClick={() => setFilter('all')} className={`p-2 rounded ${filter === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>All</button>
-          <button onClick={() => setFilter('day')} className={`p-2 rounded ${filter === 'day' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>Day</button>
-          <button onClick={() => setFilter('week')} className={`p-2 rounded ${filter === 'week' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>Week</button>
-          <button onClick={() => setFilter('month')} className={`p-2 rounded ${filter === 'month' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>Month</button>
+          <button onClick={() => setFilter('all')} className={`p-2 rounded ${filter === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>{t('all')}</button>
+          <button onClick={() => setFilter('day')} className={`p-2 rounded ${filter === 'day' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>{t('day')}</button>
+          <button onClick={() => setFilter('week')} className={`p-2 rounded ${filter === 'week' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>{t('week')}</button>
+          <button onClick={() => setFilter('month')} className={`p-2 rounded ${filter === 'month' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>{t('month')}</button>
         </div>
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white">
           <thead>
             <tr>
-              <th className="py-2 px-4 border-b">Date</th>
-              <th className="py-2 px-4 border-b">Items</th>
-              <th className="py-2 px-4 border-b">Total</th>
+              <th className="py-2 px-4 border-b">{t('date')}</th>
+              <th className="py-2 px-4 border-b">{t('items')}</th>
+              <th className="py-2 px-4 border-b">{t('total')}</th>
             </tr>
           </thead>
           <tbody>

@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useToast } from '../context/ToastContext';
 
 const RegistrationForm = ({ plans, onMemberAdded }) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', planId: '' });
   const { showToast } = useToast();
 
@@ -14,7 +16,7 @@ const RegistrationForm = ({ plans, onMemberAdded }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.planId) {
-      showToast('Please select a membership plan.', 'error');
+      showToast(t('select_plan_error'), 'error');
       return;
     }
     try {
@@ -29,24 +31,24 @@ const RegistrationForm = ({ plans, onMemberAdded }) => {
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-md h-fit">
-      <h2 className="text-xl font-semibold mb-4 text-gray-700">New Member Registration</h2>
+      <h2 className="text-xl font-semibold mb-4 text-gray-700">{t('new_member_registration')}</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
+          <label htmlFor="name" className="block text-sm font-medium text-gray-600 mb-1">{t('full_name')}</label>
           <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
         </div>
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-600 mb-1">Email</label>
-          <input type="email"  placeholder="Optional" id="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <label htmlFor="email" className="block text-sm font-medium text-gray-600 mb-1">{t('email')}</label>
+          <input type="email"  placeholder={t('optional')} id="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
         <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-600 mb-1">Phone</label>
+          <label htmlFor="phone" className="block text-sm font-medium text-gray-600 mb-1">{t('phone')}</label>
           <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
         </div>
         <div>
-          <label htmlFor="planId" className="block text-sm font-medium text-gray-600 mb-1">Plan</label>
+          <label htmlFor="planId" className="block text-sm font-medium text-gray-600 mb-1">{t('plan')}</label>
           <select id="planId" name="planId" value={formData.planId} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-            <option value="" disabled>Select a plan</option>
+            <option value="" disabled>{t('select_a_plan')}</option>
             {plans.map(plan => (
               <option key={plan._id} value={plan._id}>
                 {plan.name} - {formatCurrency(plan.price)}
@@ -54,7 +56,7 @@ const RegistrationForm = ({ plans, onMemberAdded }) => {
             ))}
           </select>
         </div>
-        <button type="submit" className="w-full inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">Register</button>
+        <button type="submit" className="w-full inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">{t('register_member')}</button>
       </form>
     </div>
   );

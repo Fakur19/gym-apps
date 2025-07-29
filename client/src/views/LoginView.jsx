@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const LoginView = ({ setAuth }) => {
+    const { t } = useTranslation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -18,19 +20,19 @@ const LoginView = ({ setAuth }) => {
             setAuth({ isAuthenticated: true, user: res.data });
             navigate('/dashboard'); // Redirect to dashboard after login
         } catch (err) {
-            setError(err.response?.data?.message || 'Login failed');
+            setError(err.response?.data?.message || t('login_failed'));
         }
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-                <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
+                <h2 className="text-2xl font-bold text-center mb-6">{t('login')}</h2>
                 {error && <p className="text-red-500 text-center mb-4">{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                            Email
+                            {t('email')}
                         </label>
                         <input
                             type="email"
@@ -43,7 +45,7 @@ const LoginView = ({ setAuth }) => {
                     </div>
                     <div className="mb-6">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-                            Password
+                            {t('password')}
                         </label>
                         <input
                             type="password"
@@ -59,7 +61,7 @@ const LoginView = ({ setAuth }) => {
                             type="submit"
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         >
-                            Sign In
+                            {t('login')}
                         </button>
                     </div>
                 </form>

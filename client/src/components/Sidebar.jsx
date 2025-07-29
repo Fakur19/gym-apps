@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { FaTachometerAlt, FaUsers, FaFileInvoiceDollar, FaCogs, FaChevronLeft, FaChevronRight, FaSignOutAlt, FaUtensils, FaCashRegister, FaHistory } from 'react-icons/fa';
 
 const NavLink = ({ id, icon, text, activeView, onClick, isCollapsed }) => {
@@ -24,17 +25,18 @@ const NavLink = ({ id, icon, text, activeView, onClick, isCollapsed }) => {
 };
 
 const Sidebar = ({ setActiveView, activeView, isCollapsed, handleLogout, userRole }) => {
+  const { t } = useTranslation();
   const navItems = [
-    { id: 'dashboard', text: 'Dashboard', icon: <FaTachometerAlt className="w-5 h-5 flex-shrink-0" /> },
-    { id: 'members', text: 'Members', icon: <FaUsers className="w-5 h-5 flex-shrink-0" /> },
-    { id: 'transactions', text: 'Transactions', icon: <FaFileInvoiceDollar className="w-5 h-5 flex-shrink-0" /> },
-    { id: 'pos', text: 'POS', icon: <FaCashRegister className="w-5 h-5 flex-shrink-0" /> },
-    { id: 'sales', text: 'Sales History', icon: <FaHistory className="w-5 h-5 flex-shrink-0" /> },
+    { id: 'dashboard', text: t('dashboard'), icon: <FaTachometerAlt className="w-5 h-5 flex-shrink-0" /> },
+    { id: 'members', text: t('members'), icon: <FaUsers className="w-5 h-5 flex-shrink-0" /> },
+    { id: 'transactions', text: t('transactions'), icon: <FaFileInvoiceDollar className="w-5 h-5 flex-shrink-0" /> },
+    { id: 'pos', text: t('pos'), icon: <FaCashRegister className="w-5 h-5 flex-shrink-0" /> },
+    { id: 'sales', text: t('sales_history'), icon: <FaHistory className="w-5 h-5 flex-shrink-0" /> },
   ];
 
   if (userRole === 'admin') {
-    navItems.push({ id: 'food', text: 'Food Management', icon: <FaUtensils className="w-5 h-5 flex-shrink-0" /> });
-    navItems.push({ id: 'admin', text: 'Admin', icon: <FaCogs className="w-5 h-5 flex-shrink-0" /> });
+    navItems.push({ id: 'food', text: t('food_bev_management'), icon: <FaUtensils className="w-5 h-5 flex-shrink-0" /> });
+    navItems.push({ id: 'admin', text: t('admin'), icon: <FaCogs className="w-5 h-5 flex-shrink-0" /> });
   }
 
   return (
@@ -63,13 +65,14 @@ const Sidebar = ({ setActiveView, activeView, isCollapsed, handleLogout, userRol
       </nav>
 
       <div className="px-2 py-4">
+        
         <button 
           onClick={handleLogout}
           className="flex items-center justify-center w-full px-4 py-2.5 rounded-lg text-gray-300 hover:bg-red-700 hover:text-white mb-2"
         >
           <FaSignOutAlt className="w-5 h-5" />
           <span className={`transition-opacity duration-200 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto ml-3'}`}>
-            Logout
+            {t('logout')}
           </span>
         </button>
       </div>

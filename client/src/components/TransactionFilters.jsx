@@ -1,4 +1,7 @@
+import { useTranslation } from 'react-i18next';
+
 const TransactionFilters = ({ onFilterChange }) => {
+  const { t } = useTranslation();
   const now = new Date();
   const currentYear = now.getFullYear();
   const currentMonth = now.getMonth();
@@ -11,10 +14,10 @@ const TransactionFilters = ({ onFilterChange }) => {
 
   return (
     <div className="flex justify-between items-center mb-4 flex-wrap gap-4">
-      <h2 className="text-xl font-semibold text-gray-700">All Transactions</h2>
+      <h2 className="text-xl font-semibold text-gray-700">{t('all_transactions')}</h2>
       <div className="flex items-center gap-2 md:gap-4">
         <select id="month-filter" defaultValue={currentMonth} onChange={handleFilterChange} className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
-          {["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].map((month, index) => (
+          {t('months', { returnObjects: true }).map((month, index) => (
             <option key={index} value={index}>{month}</option>
           ))}
         </select>

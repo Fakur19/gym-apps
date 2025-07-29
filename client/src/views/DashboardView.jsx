@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import Chart from 'chart.js/auto';
 import { getDashboardStats } from '../services/api';
 import KpiCard from '../components/KpiCard';
@@ -8,6 +9,7 @@ import { FaMoneyBillWave, FaSignInAlt, FaUserCheck, FaUserPlus } from 'react-ico
 import Spinner from '../components/Spinner';
 
 const DashboardView = () => {
+  const { t } = useTranslation();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -55,7 +57,7 @@ const DashboardView = () => {
       type: 'bar',
       data: {
         labels: data.map(d => d.day),
-        datasets: [{ label: 'Revenue (IDR)', data: data.map(d => d.revenue), backgroundColor: 'rgba(54, 162, 235, 0.6)' }]
+        datasets: [{ label: t('total_revenue'), data: data.map(d => d.revenue), backgroundColor: 'rgba(54, 162, 235, 0.6)' }]
       },
       options: { scales: { y: { beginAtZero: true } } }
     });
@@ -68,7 +70,7 @@ const DashboardView = () => {
       type: 'bar',
       data: {
         labels: data.map(d => d.day),
-        datasets: [{ label: 'Check-ins', data: data.map(d => d.checkins), backgroundColor: 'rgba(75, 192, 192, 0.6)' }]
+        datasets: [{ label: t('todays_checkins'), data: data.map(d => d.checkins), backgroundColor: 'rgba(75, 192, 192, 0.6)' }]
       },
       options: { scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
     });
@@ -88,7 +90,7 @@ const DashboardView = () => {
       type: 'line',
       data: {
         labels: labels,
-        datasets: [{ label: 'Total Check-ins', data: hoursData, borderColor: 'rgba(255, 99, 132, 1)', backgroundColor: 'rgba(255, 99, 132, 0.2)', fill: true, tension: 0.3 }]
+        datasets: [{ label: t('total_checkins'), data: hoursData, borderColor: 'rgba(255, 99, 132, 1)', backgroundColor: 'rgba(255, 99, 132, 0.2)', fill: true, tension: 0.3 }]
       },
       options: { scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
     });
@@ -115,17 +117,17 @@ const DashboardView = () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">{t('dashboard')}</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <KpiCard title="Today's Revenue" value={formatCurrency(stats.kpi.todaysRevenue)} icon={<FaMoneyBillWave className="h-6 w-6" />} />
-        <KpiCard title="Today's Check-ins" value={stats.kpi.todaysCheckins} icon={<FaSignInAlt className="h-6 w-6" />} />
-        <KpiCard title="Active Members" value={stats.kpi.activeMembers} icon={<FaUserCheck className="h-6 w-6" />} />
-        <KpiCard title="New Members Today" value={stats.kpi.newMembersToday} icon={<FaUserPlus className="h-6 w-6" />} />
+        <KpiCard title={t('total_revenue')} value={formatCurrency(stats.kpi.todaysRevenue)} icon={<FaMoneyBillWave className="h-6 w-6" />} />
+        <KpiCard title={t('todays_checkins')} value={stats.kpi.todaysCheckins} icon={<FaSignInAlt className="h-6 w-6" />} />
+        <KpiCard title={t('active_members')} value={stats.kpi.activeMembers} icon={<FaUserCheck className="h-6 w-6" />} />
+        <KpiCard title={t('new_members_today')} value={stats.kpi.newMembersToday} icon={<FaUserPlus className="h-6 w-6" />} />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <ChartCard>
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-700">Revenue</h3>
+            <h3 className="text-lg font-semibold text-gray-700">{t('total_revenue')}</h3>
             <div className="toggle-container" onClick={(e) => handleChartToggle(e, 'revenue')}>
               <button data-range="weekly" className="chart-toggle-btn active-chart-toggle">Weekly</button>
               <button data-range="monthly" className="chart-toggle-btn">Monthly</button>
@@ -135,7 +137,7 @@ const DashboardView = () => {
         </ChartCard>
         <ChartCard>
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-700">Traffic (Check-ins)</h3>
+            <h3 className="text-lg font-semibold text-gray-700">{t('todays_checkins')}</h3>
             <div className="toggle-container" onClick={(e) => handleChartToggle(e, 'traffic')}>
               <button data-range="weekly" className="chart-toggle-btn active-chart-toggle">Weekly</button>
               <button data-range="monthly" className="chart-toggle-btn">Monthly</button>
@@ -145,10 +147,10 @@ const DashboardView = () => {
         </ChartCard>
       </div>
       <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <ChartCard title="Memberships Expiring This Week">
+        <ChartCard title={t('expiring_memberships')}>
           <ExpiringMembersList members={stats.expiringSoon} />
         </ChartCard>
-        <ChartCard title="Busiest Hours (Last 30 Days)">
+        <ChartCard title={t('busiest_hours')}>
           <canvas ref={busiestHoursChartRef}></canvas>
         </ChartCard>
       </div>

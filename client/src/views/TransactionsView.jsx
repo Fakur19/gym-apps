@@ -1,10 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getTransactions } from '../services/api';
 import TransactionFilters from '../components/TransactionFilters';
 import TransactionTable from '../components/TransactionTable';
 import Spinner from '../components/Spinner';
 
 const TransactionsView = () => {
+  const { t } = useTranslation();
   const [allTransactions, setAllTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -20,14 +22,14 @@ const TransactionsView = () => {
         const response = await getTransactions();
         setAllTransactions(response.data);
       } catch (err) {
-        setError('Failed to load transactions.');
+        setError(t('no_transactions_found'));
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
     loadTransactions();
-  }, []);
+  }, [t]);
 
   const filteredTransactions = useMemo(() => {
     return allTransactions.filter(t => {
@@ -41,7 +43,7 @@ const TransactionsView = () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Transaction Log</h1>
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">{t('transactions')}</h1>
       <div className="bg-white p-6 rounded-xl shadow-md">
         <TransactionFilters onFilterChange={setFilters} />
         <TransactionTable transactions={filteredTransactions} />

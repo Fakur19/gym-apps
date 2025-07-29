@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useToast } from '../context/ToastContext';
 
 const FoodManagementView = () => {
+  const { t } = useTranslation();
   const [foods, setFoods] = useState([]);
   const [food, setFood] = useState({ name: '', price: '', stock: '' });
   const [isEditing, setIsEditing] = useState(false);
@@ -19,7 +21,7 @@ const FoodManagementView = () => {
       const { data } = await axios.get('/foods');
       setFoods(data.data);
     } catch (error) {
-      showToast('Error fetching foods', 'error');
+      showToast(t('error_fetching_foods'), 'error');
     }
   };
 
@@ -33,16 +35,16 @@ const FoodManagementView = () => {
     if (isEditing) {
       try {
         await axios.put(`/foods/${currentFoodId}`, food);
-        showToast('Food item updated successfully', 'success');
+        showToast(t('food_updated_success'), 'success');
       } catch (error) {
-        showToast('Error updating food item', 'error');
+        showToast(t('error_updating_food'), 'error');
       }
     } else {
       try {
         await axios.post('/foods', food);
-        showToast('Food item added successfully', 'success');
+        showToast(t('food_added_success'), 'success');
       } catch (error) {
-        showToast('Error adding food item', 'error');
+        showToast(t('error_adding_food'), 'error');
       }
     }
     resetForm();
@@ -58,10 +60,10 @@ const FoodManagementView = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`/foods/${id}`);
-      showToast('Food item deleted successfully', 'success');
+      showToast(t('food_deleted_success'), 'success');
       fetchFoods();
     } catch (error) {
-      showToast('Error deleting food item', 'error');
+      showToast(t('error_deleting_food'), 'error');
     }
   };
 
@@ -77,7 +79,7 @@ const FoodManagementView = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">Food Management</h1>
+      <h1 className="text-2xl font-bold mb-4">{t('food_bev_management')}</h1>
       <form onSubmit={handleSubmit} className="mb-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <input
@@ -85,7 +87,7 @@ const FoodManagementView = () => {
             name="name"
             value={food.name}
             onChange={handleInputChange}
-            placeholder="Food Name"
+            placeholder={t('food_name')}
             className="p-2 border rounded"
             required
           />
@@ -94,7 +96,7 @@ const FoodManagementView = () => {
             name="price"
             value={food.price}
             onChange={handleInputChange}
-            placeholder="Price"
+            placeholder={t('price')}
             className="p-2 border rounded"
             required
           />
@@ -103,28 +105,28 @@ const FoodManagementView = () => {
             name="stock"
             value={food.stock}
             onChange={handleInputChange}
-            placeholder="Stock"
+            placeholder={t('stock')}
             className="p-2 border rounded"
             required
           />
         </div>
         <div className="mt-4">
           <button type="submit" className="bg-blue-500 text-white p-2 rounded mr-2">
-            {isEditing ? 'Update Food' : 'Add Food'}
+            {isEditing ? t('update_food') : t('add_food')}
           </button>
           {isEditing && (
             <button type="button" onClick={resetForm} className="bg-gray-500 text-white p-2 rounded">
-              Cancel
+              {t('cancel')}
             </button>
           )}
         </div>
       </form>
       <div>
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-xl font-bold">Food List</h2>
+          <h2 className="text-xl font-bold">{t('current_inventory')}</h2>
           <input
             type="text"
-            placeholder="Search by name..."
+            placeholder={t('search_by_name')}
             className="p-2 border rounded"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -134,10 +136,10 @@ const FoodManagementView = () => {
           <table className="min-w-full bg-white">
             <thead>
               <tr>
-                <th className="py-2 px-4 border-b">Name</th>
-                <th className="py-2 px-4 border-b">Price</th>
-                <th className="py-2 px-4 border-b">Stock</th>
-                <th className="py-2 px-4 border-b">Actions</th>
+                <th className="py-2 px-4 border-b">{t('name')}</th>
+                <th className="py-2 px-4 border-b">{t('price')}</th>
+                <th className="py-2 px-4 border-b">{t('stock')}</th>
+                <th className="py-2 px-4 border-b">{t('actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -148,10 +150,10 @@ const FoodManagementView = () => {
                   <td className="py-2 px-4 border-b">{food.stock}</td>
                   <td className="py-2 px-4 border-b">
                     <button onClick={() => handleEdit(food)} className="text-blue-500 mr-2">
-                      Edit
+                      {t('edit')}
                     </button>
                     <button onClick={() => handleDelete(food._id)} className="text-red-500">
-                      Delete
+                      {t('delete')}
                     </button>
                   </td>
                 </tr>

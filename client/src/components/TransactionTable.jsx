@@ -1,4 +1,7 @@
+import { useTranslation } from 'react-i18next';
+
 const TransactionTable = ({ transactions }) => {
+  const { t } = useTranslation();
   const formatCurrency = (amount) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
 
   const totalAmount = transactions.reduce((sum, t) => sum + t.amount, 0);
@@ -8,11 +11,11 @@ const TransactionTable = ({ transactions }) => {
       <table className="min-w-full bg-white">
         <thead className="bg-gray-50">
           <tr>
-            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date & Time</th>
-            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Member Name</th>
-            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice #</th>
-            <th className="py-3 px-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('date_time')}</th>
+            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('member_name')}</th>
+            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('description')}</th>
+            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('invoice_no')}</th>
+            <th className="py-3 px-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{t('amount')}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
@@ -29,14 +32,14 @@ const TransactionTable = ({ transactions }) => {
           ) : (
             <tr>
               <td colSpan="5" className="text-center py-4 text-gray-500">
-                No transactions found for this period. Adjust your filters or add new members.
+                {t('no_transactions_found_period')}
               </td>
             </tr>
           )}
         </tbody>
         <tfoot>
           <tr className="bg-gray-100">
-            <td colSpan="4" className="py-3 px-4 text-right text-base font-semibold text-gray-700">Total Amount:</td>
+            <td colSpan="4" className="py-3 px-4 text-right text-base font-semibold text-gray-700">{t('total_amount')}:</td>
             <td className="py-3 px-4 text-right text-base font-bold text-blue-600">{formatCurrency(totalAmount)}</td>
           </tr>
         </tfoot>
