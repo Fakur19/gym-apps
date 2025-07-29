@@ -54,7 +54,7 @@ const MembersView = ({ onNavigate }) => {
 
   // Memoized calculation for filtering and pagination
   const paginatedMembers = useMemo(() => {
-    const todaysCheckinIds = new Set(checkins.map(c => c.member));
+    const todaysCheckinIds = new Set(checkins.map(c => c.member?._id || c.member));
 
     const processedMembers = members.map(member => ({
       ...member,
@@ -72,8 +72,8 @@ const MembersView = ({ onNavigate }) => {
 
     const filteredBySearch = filteredByStatus.filter(member =>
       searchTerm === '' ||
-      member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      member.email.toLowerCase().includes(searchTerm.toLowerCase())
+      member.name.toLowerCase().includes(searchTerm.toLowerCase())
+      //|| member.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const totalPages = Math.ceil(filteredBySearch.length / membersPerPage);
@@ -145,8 +145,8 @@ const MembersView = ({ onNavigate }) => {
       onNavigate('profile', member._id);
     } else if (action === 'checkin') {
       try {
-        await createCheckin(member._id);
-        const newCheckin = { _id: new Date().toISOString(), memberName: member.name, checkInTime: new Date() };
+        const response = await createCheckin(member._id);
+        const newCheckin = response.data;
         setCheckins([newCheckin, ...checkins]);
         showToast('Member checked in successfully!', 'success');
       } catch (err) {

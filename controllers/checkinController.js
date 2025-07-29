@@ -22,7 +22,10 @@ exports.createCheckin = async (req, res) => {
         });
 
         await newCheckin.save();
-        res.status(201).json({ msg: `${member.name} checked in successfully.` });
+        
+        const populatedCheckin = await Checkin.findById(newCheckin._id).populate('member', 'name');
+        
+        res.status(201).json(populatedCheckin);
 
     } catch (err) {
         console.error(err.message);
