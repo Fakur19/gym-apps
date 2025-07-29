@@ -144,5 +144,6 @@
   "member_updated_success" : "Pembaharuan Member Berhasil",
   "total_amount" : "Total Transaksi",
   "sale_completed_success" : "Penjualan Berhasil",
-  "food_added_success" : "Berhasil Menambah"
+  "food_added_success" : "Berhasil Menambah",
+  "update_food" : "Perbaharui Item"
 }

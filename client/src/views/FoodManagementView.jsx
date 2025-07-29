@@ -88,7 +88,7 @@ const FoodManagementView = () => {
             value={food.name}
             onChange={handleInputChange}
             placeholder={t('food_name')}
-            className="p-2 border rounded"
+            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm"
             required
           />
           <input
@@ -97,7 +97,7 @@ const FoodManagementView = () => {
             value={food.price}
             onChange={handleInputChange}
             placeholder={t('price')}
-            className="p-2 border rounded"
+            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm"
             required
           />
           <input
@@ -106,7 +106,7 @@ const FoodManagementView = () => {
             value={food.stock}
             onChange={handleInputChange}
             placeholder={t('stock')}
-            className="p-2 border rounded"
+            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm"
             required
           />
         </div>
@@ -127,28 +127,28 @@ const FoodManagementView = () => {
           <input
             type="text"
             placeholder={t('search_by_name')}
-            className="p-2 border rounded"
+            className="w-1/2 px-3 py-2 border border-gray-300 rounded-md shadow-sm"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white">
-            <thead>
+            <thead className="bg-gray-50">
               <tr>
-                <th className="py-2 px-4 border-b">{t('name')}</th>
-                <th className="py-2 px-4 border-b">{t('price')}</th>
-                <th className="py-2 px-4 border-b">{t('stock')}</th>
-                <th className="py-2 px-4 border-b">{t('actions')}</th>
+                <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('name')}</th>
+                <th className="py-3 px-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{t('price')}</th>
+                <th className="py-3 px-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{t('stock')}</th>
+                <th className="py-3 px-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">{t('actions')}</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-200">
               {filteredFoods.map((food) => (
-                <tr key={food._id}>
-                  <td className="py-2 px-4 border-b">{food.name}</td>
-                  <td className="py-2 px-4 border-b">{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(food.price)}</td>
-                  <td className="py-2 px-4 border-b">{food.stock}</td>
-                  <td className="py-2 px-4 border-b">
+                <tr key={food._id} className="hover:bg-gray-50">
+                  <td className="py-4 px-4 whitespace-nowrap text-sm text-gray-500">{food.name}</td>
+                  <td className="py-4 px-4 whitespace-nowrap text-sm text-gray-900 font-medium text-right">{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(food.price)}</td>
+                  <td className="py-4 px-4 whitespace-nowrap text-sm text-gray-500 text-right">{food.stock}</td>
+                  <td className="py-4 px-4 whitespace-nowrap text-sm text-gray-500 text-center">
                     <button onClick={() => handleEdit(food)} className="text-blue-500 mr-2">
                       {t('edit')}
                     </button>
