@@ -21,7 +21,8 @@ const TransactionSchema = new Schema({
     },
     transactionDate: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        index: true
     }
 });
 

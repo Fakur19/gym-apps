@@ -5,6 +5,7 @@ const FoodSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please add a name'],
     trim: true,
+    index: true
   },
   price: {
     type: Number,

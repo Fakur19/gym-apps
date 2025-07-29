@@ -2,25 +2,55 @@ const Member = require('../models/Member');
 const Checkin = require('../models/Checkin');
 const Transaction = require('../models/Transaction');
 
-// Helper function to generate chart data for a given range
+// Helper function to generate chart data for a given range using aggregation
 const getChartDataForRange = async (days) => {
-    const chartData = [];
-    for (let i = days - 1; i >= 0; i--) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        const dayStart = new Date(date);
-        dayStart.setHours(0, 0, 0, 0);
-        const dayEnd = new Date(date);
-        dayEnd.setHours(23, 59, 59, 999);
+    const endDate = new Date();
+    endDate.setHours(23, 59, 59, 999);
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days + 1);
+    startDate.setHours(0, 0, 0, 0);
+
+    const dateRange = [];
+    for (let i = 0; i < days; i++) {
+        const date = new Date(startDate);
+        date.setDate(startDate.getDate() + i);
         const dayLabel = days === 30
             ? date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
             : date.toLocaleDateString('en-US', { weekday: 'short' });
-        const dailyRevenue = (await Transaction.find({ transactionDate: { $gte: dayStart, $lt: dayEnd } }))
-            .reduce((sum, t) => sum + t.amount, 0);
-        const dailyCheckins = await Checkin.countDocuments({ checkInTime: { $gte: dayStart, $lt: dayEnd } });
-        chartData.push({ day: dayLabel, revenue: dailyRevenue, checkins: dailyCheckins });
+        dateRange.push({ date: date.toISOString().split('T')[0], dayLabel });
     }
-    return chartData;
+
+    const [transactionsData, checkinsData] = await Promise.all([
+        Transaction.aggregate([
+            { $match: { transactionDate: { $gte: startDate, $lte: endDate } } },
+            {
+                $group: {
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$transactionDate" } },
+                    totalRevenue: { $sum: "$amount" }
+                }
+            },
+            { $sort: { _id: 1 } }
+        ]),
+        Checkin.aggregate([
+            { $match: { checkInTime: { $gte: startDate, $lte: endDate } } },
+            {
+                $group: {
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$checkInTime" } },
+                    count: { $sum: 1 }
+                }
+            },
+            { $sort: { _id: 1 } }
+        ])
+    ]);
+
+    const revenueMap = new Map(transactionsData.map(item => [item._id, item.totalRevenue]));
+    const checkinsMap = new Map(checkinsData.map(item => [item._id, item.count]));
+
+    return dateRange.map(day => ({
+        day: day.dayLabel,
+        revenue: revenueMap.get(day.date) || 0,
+        checkins: checkinsMap.get(day.date) || 0
+    }));
 };
 
 // Get all dashboard statistics

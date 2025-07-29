@@ -13,7 +13,8 @@ const CheckinSchema = new Schema({
     },
     checkInTime: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        index: true
     }
 });
 
