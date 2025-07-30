@@ -1,9 +1,7 @@
 import axios from 'axios';
 
 // Set the base URL dynamically based on the environment
-const API_URL = import.meta.env.PROD 
-  ? 'https://gym-apps-itej.onrender.com/api' 
-  : 'http://localhost:3000/api';
+const API_URL = '/api';
 
 axios.defaults.baseURL = API_URL;
 

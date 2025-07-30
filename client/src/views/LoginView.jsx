@@ -31,7 +31,7 @@ const LoginView = ({ setAuth }) => {
                 <div className="text-gray-800 text-center">
                     <img src="/esagym.jpg" alt="Esa Gym Logo" className="w-32 h-32 mx-auto mb-6" />
                     <h1 className="text-5xl font-extrabold mb-2">Esa Gym</h1>
-                    <p className="text-xl font-light text-gray-600">Jalan Kp Cijeungjing No 101</p>
+                    {/* <p className="text-xl font-light text-gray-600">Jalan Kp Cijeungjing No 101</p> */}
                 </div>
             </div>
 
@@ -42,7 +42,7 @@ const LoginView = ({ setAuth }) => {
                     <div className="flex flex-col items-center mb-6 lg:hidden">
                         <img src="/esagym.jpg" alt="Esa Gym Logo" className="w-24 h-24 mb-4" />
                         <h1 className="text-3xl font-bold text-gray-800">Esa Gym</h1>
-                        <p className="text-sm text-gray-500">Jalan Kp Cijeungjing No 101</p>
+                        {/* <p className="text-sm text-gray-500">Jalan Kp Cijeungjing No 101</p> */}
                     </div>
                     <h2 className="text-2xl font-bold text-center mb-6">{t('login')}</h2>
                 {error && <p className="text-red-500 text-center mb-4">{error}</p>}
